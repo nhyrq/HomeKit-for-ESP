@@ -1,0 +1,46 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # 当代码推送到main分支时自动触发部署
+  push:
+    branches: ["main"]
+
+  # 允许在GitHub Actions面板手动触发部署
+  workflow_dispatch:
+
+# 配置GITHUB_TOKEN的权限，确保能部署到Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 并发控制：同一时间只允许一个部署任务运行，不中断正在执行的部署
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # 单个部署任务（因为只需要部署静态文件）
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：拉取仓库代码到GitHub的虚拟机
+      - name: Checkout
+        uses: actions/checkout@v4
+      # 步骤2：初始化GitHub Pages环境
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      # 步骤3：上传要部署的文件（整个仓库，包含你的单个HTML）
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传仓库根目录的所有文件（适配你单个HTML的场景）
+          path: '.'
+      # 步骤4：执行部署，输出Pages访问地址
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
