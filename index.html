@@ -165,8 +165,7 @@
             text-align: center
         }
 
-        /*
-    新增：错误提示样式 */
+        /* 新增：错误提示样式 */
         .error-tip {
             position: absolute;
             color: #ff3b30;
@@ -178,8 +177,26 @@
         }
     </style>
     <script>
+        // 新增：解析URL参数的工具函数（核心修改）
+        function getUrlParam(name) {
+            const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`);
+            const r = window.location.search.substr(1).match(reg);
+            return r ? decodeURIComponent(r[2]) : null;
+        }
+
         // 等待DOM元素完全加载后执行
         document.addEventListener('DOMContentLoaded', function () {
+            // ========== 新增核心逻辑：动态修改表单提交地址（核心修改） ==========
+            const esp32IP = getUrlParam('key'); // 从URL获取ESP32的IP（key参数）
+            const form = document.querySelector('form');
+            if (esp32IP && form) {
+                // 将表单提交地址改为：http://ESP32_IP/configure
+                form.action = `http://${esp32IP}/configure`;
+                console.log("表单提交地址已设置为：", form.action);
+            } else {
+                alert("未获取到ESP32 IP，表单无法提交！请确保从ESP32的IP地址跳转过来");
+            }
+
             // 定义角度范围常量
             const MIN_ANGLE = 0;
             const MAX_ANGLE = 180;
@@ -224,8 +241,8 @@
             });
 
             // ========== 3. 表单提交前最终校验 ==========
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function (e) {
+            const formElement = document.querySelector('form');
+            formElement.addEventListener('submit', function (e) {
                 let isFormValid = true;
 
                 // 校验所有角度输入框
