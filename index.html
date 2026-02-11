@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang=zh-CN>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport"
@@ -165,7 +164,6 @@
             text-align: center
         }
 
-        /* 新增：错误提示样式 */
         .error-tip {
             position: absolute;
             color: #ff3b30;
@@ -177,31 +175,39 @@
         }
     </style>
     <script>
-        // 新增：解析URL参数的工具函数（核心修改）
+        // 解析URL参数的工具函数
         function getUrlParam(name) {
             const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`);
             const r = window.location.search.substr(1).match(reg);
             return r ? decodeURIComponent(r[2]) : null;
         }
 
-        // 等待DOM元素完全加载后执行
         document.addEventListener('DOMContentLoaded', function () {
-            // ========== 新增核心逻辑：动态修改表单提交地址（核心修改） ==========
-            const esp32IP = getUrlParam('key'); // 从URL获取ESP32的IP（key参数）
+            // ========== 1. 解析URL参数，配置表单+填入当前角度 ==========
+            const esp32IP = getUrlParam('key');     // ESP32 IP
+            const currentOn = getUrlParam('on');   // 当前开启角度
+            const currentOff = getUrlParam('off'); // 当前关闭角度
             const form = document.querySelector('form');
+
+            // 设置表单提交地址
             if (esp32IP && form) {
-                // 将表单提交地址改为：http://ESP32_IP/configure
                 form.action = `http://${esp32IP}/configure`;
-                console.log("表单提交地址已设置为：", form.action);
+                console.log("表单提交地址：", form.action);
             } else {
-                alert("未获取到ESP32 IP，表单无法提交！请确保从ESP32的IP地址跳转过来");
+                alert("未获取到ESP32 IP，表单无法提交！");
             }
 
-            // 定义角度范围常量
+            // 填入当前角度到输入框
+            const onInput = document.querySelector('input[name="on"]');
+            const offInput = document.querySelector('input[name="off"]');
+            if (currentOn) onInput.value = currentOn;  // 开启角度输入框
+            if (currentOff) offInput.value = currentOff; // 关闭角度输入框
+
+            // ========== 2. 原有角度交互逻辑（保留） ==========
             const MIN_ANGLE = 0;
             const MAX_ANGLE = 180;
 
-            // ========== 1. 加减按钮逻辑 ==========
+            // 加减按钮逻辑
             document.addEventListener('click', function (e) {
                 const btnContainer = e.target.closest('.b');
                 if (!btnContainer) return;
@@ -210,66 +216,44 @@
                 if (!input) return;
 
                 let currentValue = Number(input.value) || MIN_ANGLE;
-
                 if (e.target.classList.contains('minus')) {
-                    // 减1，不低于最小值0
                     currentValue = Math.max(MIN_ANGLE, currentValue - 1);
                 } else if (e.target.classList.contains('plus')) {
-                    // 加1，不高于最大值180
                     currentValue = Math.min(MAX_ANGLE, currentValue + 1);
                 }
-
                 input.value = currentValue;
-                // 清除可能的错误提示
                 hideErrorTip(input);
             });
 
-            // ========== 2. 输入框实时校验（只允许数字） ==========
+            // 输入框校验
             const degreeInputs = document.querySelectorAll('.degree');
             degreeInputs.forEach(input => {
-                // 实时输入过滤：只保留数字
                 input.addEventListener('input', function () {
-                    // 移除所有非数字字符
                     this.value = this.value.replace(/[^0-9]/g, '');
                     hideErrorTip(this);
                 });
-
-                // 失焦时校正数值（超出范围自动修正）
                 input.addEventListener('blur', function () {
                     validateAndCorrectAngle(this);
                 });
             });
 
-            // ========== 3. 表单提交前最终校验 ==========
-            const formElement = document.querySelector('form');
-            formElement.addEventListener('submit', function (e) {
+            // 表单提交校验
+            form.addEventListener('submit', function (e) {
                 let isFormValid = true;
-
-                // 校验所有角度输入框
                 degreeInputs.forEach(input => {
                     if (!validateAndCorrectAngle(input, true)) {
                         isFormValid = false;
                     }
                 });
-
-                // 校验不通过则阻止提交
                 if (!isFormValid) {
                     e.preventDefault();
                     alert('请输入0-180之间的有效角度数值');
                 }
             });
 
-            // ========== 工具函数 ==========
-            /**
-             * 校验并校正角度数值
-             * @param {HTMLInputElement} input - 输入框元素
-             * @param {boolean} showTip - 是否显示错误提示
-             * @returns {boolean} 是否校验通过
-             */
+            // 工具函数
             function validateAndCorrectAngle(input, showTip = false) {
                 let value = Number(input.value) || MIN_ANGLE;
-
-                // 超出范围则自动修正
                 if (value < MIN_ANGLE) {
                     value = MIN_ANGLE;
                     showTip && showErrorTip(input, '角度不能小于0');
@@ -280,18 +264,11 @@
                     hideErrorTip(input);
                     return true;
                 }
-
                 input.value = value;
-                return !showTip; // 自动修正后，非强制提示场景视为有效
+                return !showTip;
             }
 
-            /**
-             * 显示错误提示
-             * @param {HTMLInputElement} input - 输入框元素
-             * @param {string} text - 提示文本
-             */
             function showErrorTip(input, text) {
-                // 查找或创建错误提示元素
                 let tip = input.closest('.d').querySelector('.error-tip');
                 if (!tip) {
                     tip = document.createElement('div');
@@ -302,20 +279,13 @@
                 tip.style.display = 'block';
             }
 
-            /**
-             * 隐藏错误提示
-             * @param {HTMLInputElement} input - 输入框元素
-             */
             function hideErrorTip(input) {
                 const tip = input.closest('.d').querySelector('.error-tip');
-                if (tip) {
-                    tip.style.display = 'none';
-                }
+                if (tip) tip.style.display = 'none';
             }
         });
     </script>
 </head>
-
 <body class="box">
     <img class="homekit_icon" src="https://creation.bcmcdn.com/716/appcraft/IMAGE_ehkk8kr4H_1770536778306.svg">
     <div class="toptext">调整开关角度</div>
@@ -343,5 +313,4 @@
         <input type="submit" id="lick1" style="display: none">
     </form>
 </body>
-
 </html>
