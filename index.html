@@ -231,7 +231,7 @@
                 input.addEventListener('input', function () {
                     // 移除所有非数字字符
                     this.value = this.value.replace(/[^0-9]/g, '');
-                    hideErrorTip(this);
+                    hideErrorTip(input);
                 });
 
                 // 失焦时校正数值（超出范围自动修正）
@@ -320,7 +320,8 @@
     <img class="homekit_icon" src="https://creation.bcmcdn.com/716/appcraft/IMAGE_ehkk8kr4H_1770536778306.svg">
     <div class="toptext">调整开关角度</div>
 
-    <form class="box" action="/configure" method="get">
+    <!-- 核心改动：method从get改为post -->
+    <form class="box" action="/configure" method="post">
         <div class="d" style="top: 189px;">
             <div class="p">开启角度</div>
             <div class="b" style="right: 11px;">
