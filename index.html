@@ -6,48 +6,186 @@
     <meta name="viewport"
         content="width=device-width,initial-scale=1,shrink-to-fit=no,viewport-fit=cover,minimum-scale=1,maximum-scale=1,user-scalable=no">
     <title>调整角度</title>
-    <style >
-        .box { display: flex; flex-direction: column;
-    justify-content: flex-start; align-items: center } .homekit_icon { position: absolute; width:
-    120px; height: 34px; right: 17px; top: 18px; } .b { position: absolute; width: 120px; height:
-    30px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-    border-radius: 10px; background: rgba(255, 255, 255, 1); .minus { position: absolute; width:
-    18px; height: 18px; left: 9px; cursor: pointer; } .plus { position: absolute; width: 18px;
-    height: 18px; right: 9px; cursor: pointer; } .degree { position: absolute; width: 60px; height:
-    21px; display: flex; flex-direction: row; align-items: center; color: rgba(68, 68, 68, 1);
-    outline: 0; border: none; font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang
-    SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-style: Medium; font-size: 18px;
-    font-weight: 500; line-height: 21px; letter-spacing: -0.41px; text-align: center; } } .d {
-    position: absolute; width: 340px; height: 48px; border-radius: 12px; background: rgba(243, 242,
-    247, 1); display: flex; flex-direction: column; justify-content: center; align-items: center; .p
-    { position: absolute; left: 18px; width: 68px; height: 19px; display: flex; flex-direction:
-    column; justify-content: center; align-items: center; color: rgba(68, 68, 68, 1); font-family:
-    "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica",
-    "Arial", sans-serif; font-style: Medium; font-size: 16px; font-weight: 500; line-height: 19px;
-    letter-spacing: -0.41px; text-align: left; } } .button { position: absolute; width: 340px;
-    height: 44px; top: 350px; border-radius: 10px; background: rgb(0, 122, 255); display: flex;
-    flex-direction: column; justify-content: center; align-items: center; cursor: pointer; .text {
-    position: absolute; width: 296px; height: 22px; display: flex; flex-direction: column;
-    justify-content: flex-start; align-items: center; user-select: none; color: rgb(255, 255, 255);
-    font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue",
-    "Helvetica", "Arial", sans-serif; font-size: 16px; font-weight: 600; line-height: 22px;
-    letter-spacing: -0.41px; text-align: center } } .toptext { position: absolute; width: 310px;
-    height: 28px; top: 105px; display: flex; flex-direction: column; justify-content: flex-start;
-    align-items: center; user-select: none; color: #000000; font-family: "SF Pro SC", "SF Pro Text",
-    "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-size:
-    20px; font-weight: 600; line-height: 22px; letter-spacing: -0.41px; text-align: center } /*
-    新增：错误提示样式 */ .error-tip { position: absolute; color: #ff3b30; font-size: 12px; top: 42px; left:
-    20px; display: none; } 
+    <style>
+        .box {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center
+        }
+
+        .homekit_icon {
+            position: absolute;
+            width:
+                120px;
+            height: 34px;
+            right: 17px;
+            top: 18px;
+        }
+
+        .b {
+            position: absolute;
+            width: 120px;
+            height:
+                30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 1);
+
+            .minus {
+                position: absolute;
+                width:
+                    18px;
+                height: 18px;
+                left: 9px;
+                cursor: pointer;
+                z-index: 9999;
+            }
+
+            .plus {
+                position: absolute;
+                width: 18px;
+                height: 18px;
+                right: 9px;
+                cursor: pointer;
+                z-index: 9999;
+            }
+
+            .degree {
+                position: absolute;
+                width: 60px;
+                height:
+                    21px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                color: rgba(68, 68, 68, 1);
+                outline: 0;
+                border: none;
+                font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFangSC", " Helvetica Neue", " Helvetica", " Arial", sans-serif;
+                font-style: Medium;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 21px;
+                letter-spacing: -0.41px;
+                text-align: center;
+                z-index: 500;
+            }
+        }
+
+        .d {
+            position: absolute;
+            width: 340px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(243, 242,
+                    247, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .p {
+                position: absolute;
+                left: 18px;
+                width: 68px;
+                height: 19px;
+                display: flex;
+                flex-direction:
+                    column;
+                justify-content: center;
+                align-items: center;
+                color: rgba(68, 68, 68, 1);
+                font-family:
+                    "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica",
+                    "Arial", sans-serif;
+                font-style: Medium;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                letter-spacing: -0.41px;
+                text-align: left;
+            }
+        }
+
+        .button {
+            position: absolute;
+            width: 340px;
+            height: 44px;
+            top: 350px;
+            border-radius: 10px;
+            background: rgb(0, 122, 255);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            .text {
+                position: absolute;
+                width: 296px;
+                height: 22px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                user-select: none;
+                color: rgb(255, 255, 255);
+                font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue",
+                    "Helvetica", "Arial", sans-serif;
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 22px;
+                letter-spacing: -0.41px;
+                text-align: center
+            }
+        }
+
+        .toptext {
+            position: absolute;
+            width: 310px;
+            height: 28px;
+            top: 105px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            user-select: none;
+            color: #000000;
+            font-family: "SF Pro SC", "SF Pro Text",
+                "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size:
+                20px;
+            font-weight: 600;
+            line-height: 22px;
+            letter-spacing: -0.41px;
+            text-align: center
+        }
+
+        /*
+    新增：错误提示样式 */
+        .error-tip {
+            position: absolute;
+            color: #ff3b30;
+            font-size: 12px;
+            top: 42px;
+            left:
+                20px;
+            display: none;
+        }
     </style>
     <script>
         // 等待DOM元素完全加载后执行
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // 定义角度范围常量
             const MIN_ANGLE = 0;
             const MAX_ANGLE = 180;
-            
+
             // ========== 1. 加减按钮逻辑 ==========
-            document.addEventListener('click', function(e) {
+            document.addEventListener('click', function (e) {
                 const btnContainer = e.target.closest('.b');
                 if (!btnContainer) return;
 
@@ -73,23 +211,23 @@
             const degreeInputs = document.querySelectorAll('.degree');
             degreeInputs.forEach(input => {
                 // 实时输入过滤：只保留数字
-                input.addEventListener('input', function() {
+                input.addEventListener('input', function () {
                     // 移除所有非数字字符
                     this.value = this.value.replace(/[^0-9]/g, '');
                     hideErrorTip(this);
                 });
 
                 // 失焦时校正数值（超出范围自动修正）
-                input.addEventListener('blur', function() {
+                input.addEventListener('blur', function () {
                     validateAndCorrectAngle(this);
                 });
             });
 
             // ========== 3. 表单提交前最终校验 ==========
             const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 let isFormValid = true;
-                
+
                 // 校验所有角度输入框
                 degreeInputs.forEach(input => {
                     if (!validateAndCorrectAngle(input, true)) {
@@ -113,7 +251,7 @@
              */
             function validateAndCorrectAngle(input, showTip = false) {
                 let value = Number(input.value) || MIN_ANGLE;
-                
+
                 // 超出范围则自动修正
                 if (value < MIN_ANGLE) {
                     value = MIN_ANGLE;
