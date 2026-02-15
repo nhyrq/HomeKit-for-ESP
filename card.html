@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加到 Apple Wallet</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f7; /* Apple 风格浅灰背景 */
+        }
+        .container {
+            text-align: center;
+        }
+        .wallet-button {
+            display: inline-block;
+            margin: 20px auto;
+        }
+        .wallet-button img {
+            width: 250px; /* Apple 官方推荐网页按钮宽度 */
+            height: auto; /* 保持比例 */
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+        .wallet-button img:hover {
+            opacity: 0.8; /* 轻微悬停效果 */
+        }
+        .description {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="mycard.pkpass" download="card.pkpass" class="wallet-button">
+            <!-- Apple 官方 SVG 图标：从 https://developer.apple.com/wallet/add-to-apple-wallet-guidelines/ 下载 add-to-apple-wallet-badge.svg 并放到同一文件夹 -->
+            <img src="add-to-apple-wallet-badge.svg" alt="添加到 Apple Wallet">
+        </a>
+        <p class="description">点击按钮将下载并添加到您的 Apple Wallet</p>
+    </div>
+</body>
+</html>
